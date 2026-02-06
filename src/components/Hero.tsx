@@ -52,7 +52,7 @@ const Hero: React.FC = () => {
                 <img 
                   src="/okladka.jpg" 
                   alt="Sprzedaż mieszkania krok po kroku - okładka ebooka" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
