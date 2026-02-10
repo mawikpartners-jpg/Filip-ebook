@@ -1,118 +1,158 @@
 import React, { useState } from 'react';
-import { handleCheckout } from '../utils/stripe';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 const Pricing: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handlePurchase = async () => {
-    setIsLoading(true);
-    setError(null);
-    
+  const handleCheckout = async () => {
+    setLoading(true);
     try {
-      // Replace with your actual Stripe Price ID
-      await handleCheckout('price_1234567890');
-    } catch (err) {
-      setError('Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie.');
-      console.error(err);
+      const stripe = await stripePromise;
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: import.meta.env.VITE_STRIPE_PRICE_ID,
+        }),
+      });
+
+      const session = await response.json();
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <section id="pricing" className="py-20 px-4 bg-black">
-      <div className="container mx-auto max-w-4xl">
-        <div className="text-center mb-12">
+    <section id="pricing" className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
+      <div className="container mx-auto">
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Zacznij oszczędzać <span className="text-gradient">już dziś</span>
+            Zacznij <span className="text-gradient">oszczędzać już dziś</span>
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Jednorazowa inwestycja, która zwróci się wielokrotnie
           </p>
         </div>
 
-        <div className="bg-gradient-to-br from-gray-900 to-black border-4 border-secondary rounded-2xl p-8 md:p-12 relative overflow-hidden">
-          <div className="absolute top-0 right-0 bg-secondary text-primary px-6 py-2 rounded-bl-2xl font-bold">
-            OFERTA SPECJALNA
-          </div>
-
-          <div className="mt-8">
-            <div className="flex items-baseline justify-center mb-8">
-              <span className="text-gray-400 line-through text-3xl mr-4">397 zł</span>
-              <span className="text-6xl font-bold text-secondary">197 zł</span>
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gradient-to-br from-secondary/20 to-secondary/5 border-4 border-secondary rounded-3xl p-8 md:p-12 relative overflow-hidden">
+            {/* Ribbon */}
+            <div className="absolute top-6 -right-12 bg-red-600 text-white px-12 py-2 transform rotate-45 text-sm font-bold shadow-lg">
+              BESTSELLER
             </div>
 
             <div className="text-center mb-8">
-              <div className="inline-block bg-red-500/20 text-red-400 px-4 py-2 rounded-lg font-semibold">
-                ⚠️ Cena promocyjna obowiązuje tylko do końca tygodnia!
+              <h3 className="text-3xl font-bold mb-2">E-book + Darmowa Konsultacja</h3>
+              <p className="text-gray-300 text-lg">
+                Sprzedaż mieszkania krok po kroku
+              </p>
+            </div>
+
+            {/* Price */}
+            <div className="text-center mb-8">
+              <div className="inline-block">
+                <div className="text-6xl font-bold text-secondary mb-2">269,99 zł</div>
+                <div className="text-gray-400 line-through text-xl mb-2">499,99 zł</div>
+                <div className="bg-secondary text-primary px-4 py-2 rounded-lg font-bold">
+                  Oszczędzasz nawet kilkanaście tysięcy złotych!
+                </div>
               </div>
             </div>
 
-            <ul className="space-y-4 mb-10">
-              {[
-                'Kompletny e-book (120+ stron)',
-                '8 szczegółowych rozdziałów',
-                '15+ praktycznych checklistów',
-                '10+ szablonów dokumentów',
-                '4 bonusy premium (wartość 147 zł)',
-                'Natychmiastowy dostęp online',
-                'Dożywotni dostęp do aktualizacji',
-                '30-dniowa gwarancja zwrotu pieniędzy',
-              ].map((feature, index) => (
-                <li key={index} className="flex items-center text-lg">
-                  <svg
-                    className="w-6 h-6 text-secondary mr-3 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            {error && (
-              <div className="mb-6 bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg">
-                {error}
+            {/* What you get */}
+            <div className="mb-8">
+              <h4 className="text-2xl font-bold text-secondary text-center mb-6">
+                Co dostajesz po zakupie:
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
+                  <span className="text-secondary text-2xl flex-shrink-0">🎁</span>
+                  <div>
+                    <p className="font-bold text-white">E-book PDF (66 stron)</p>
+                    <p className="text-sm text-gray-400">Natychmiastowy dostęp po zakupie</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
+                  <span className="text-secondary text-2xl flex-shrink-0">📞</span>
+                  <div>
+                    <p className="font-bold text-white">Darmowa konsultacja telefoniczna</p>
+                    <p className="text-sm text-gray-400">Z agentem nieruchomości Filipem Liberdą</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
+                  <span className="text-secondary text-2xl flex-shrink-0">✅</span>
+                  <div>
+                    <p className="font-bold text-white">8 etapów + rozdział bonusowy</p>
+                    <p className="text-sm text-gray-400">Kompletny proces sprzedaży</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
+                  <span className="text-secondary text-2xl flex-shrink-0">📋</span>
+                  <div>
+                    <p className="font-bold text-white">2 rozbudowane checklisty</p>
+                    <p className="text-sm text-gray-400">+ 20+ praktycznych wskazówek</p>
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
 
-            <button
-              onClick={handlePurchase}
-              disabled={isLoading}
-              className="w-full bg-secondary text-primary py-6 rounded-xl font-bold text-2xl hover:bg-yellow-300 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              {isLoading ? 'Przetwarzanie...' : 'Kup teraz za 197 zł'}
-            </button>
+            {/* CTA Button */}
+            <div className="text-center">
+              <button
+                onClick={handleCheckout}
+                disabled={loading}
+                className="bg-secondary text-primary px-12 py-5 rounded-xl font-bold text-2xl hover:bg-yellow-300 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl"
+              >
+                {loading ? 'Przekierowanie...' : 'Kup teraz za 269,99 zł'}
+              </button>
+              <p className="text-sm text-gray-400 mt-4">
+                � Bezpieczna płatność przez Stripe • ✅ Natychmiastowy dostęp
+              </p>
+            </div>
 
-            <div className="mt-8 text-center text-gray-400 text-sm">
-              <p className="mb-2">🔒 Bezpieczna płatność przez Stripe</p>
-              <p>✅ Gwarancja zwrotu pieniędzy w ciągu 30 dni</p>
+            {/* Guarantees */}
+            <div className="mt-8 grid md:grid-cols-3 gap-4 text-center">
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-2xl mb-2">�</div>
+                <p className="text-sm text-gray-300">Bezpieczna płatność</p>
+              </div>
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-2xl mb-2">⚡</div>
+                <p className="text-sm text-gray-300">Natychmiastowy dostęp</p>
+              </div>
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-2xl mb-2">💯</div>
+                <p className="text-sm text-gray-300">100% praktycznej wiedzy</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-12 grid md:grid-cols-3 gap-6 text-center">
-          <div className="bg-gray-900 p-6 rounded-xl">
-            <div className="text-3xl mb-2">💳</div>
-            <h3 className="font-bold mb-2">Bezpieczna płatność</h3>
-            <p className="text-gray-400 text-sm">Szyfrowane połączenie SSL</p>
-          </div>
-          <div className="bg-gray-900 p-6 rounded-xl">
-            <div className="text-3xl mb-2">⚡</div>
-            <h3 className="font-bold mb-2">Natychmiastowy dostęp</h3>
-            <p className="text-gray-400 text-sm">Pobierz zaraz po zakupie</p>
-          </div>
-          <div className="bg-gray-900 p-6 rounded-xl">
-            <div className="text-3xl mb-2">🛡️</div>
-            <h3 className="font-bold mb-2">Gwarancja zwrotu</h3>
-            <p className="text-gray-400 text-sm">30 dni bez pytań</p>
+          {/* Additional trust element */}
+          <div className="mt-8 text-center">
+            <div className="bg-secondary/10 border-2 border-secondary/30 rounded-xl p-6">
+              <p className="text-lg text-gray-300">
+                <span className="text-secondary font-bold">Ważne!</span> Po zakupie ebooka otrzymujesz również możliwość 
+                <span className="text-secondary font-semibold"> bezpłatnej konsultacji telefonicznej z Filipem Liberdą</span>, 
+                jeśli będziesz mieć jakiekolwiek pytania lub wątpliwości. To nie tylko e-book – to kompleksowe wsparcie!
+              </p>
+            </div>
           </div>
         </div>
       </div>
