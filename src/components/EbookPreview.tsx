@@ -5,26 +5,14 @@ import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const EbookPreview: React.FC = () => {
-  const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageWidth, setPageWidth] = useState<number>(400);
+  const [numPages] = useState<number>(10); // Total pages to show
   const [error, setError] = useState<string | null>(null);
+  const [touchStart, setTouchStart] = useState<number>(0);
+  const [touchEnd, setTouchEnd] = useState<number>(0);
 
-  // Handle responsive width for mobile
-  useEffect(() => {
-    const updateWidth = () => {
-      if (typeof window !== 'undefined') {
-        setPageWidth(Math.min(window.innerWidth - 80, 400));
-      }
-    };
-    
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
-
+  // Desktop PDF viewer functions
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-    setNumPages(Math.min(numPages, 10)); // Show max 10 pages
     setError(null);
   }
 
@@ -39,6 +27,33 @@ const EbookPreview: React.FC = () => {
 
   const goToNextPage = () => {
     setPageNumber((prev) => Math.min(numPages, prev + 1));
+  };
+
+  // Touch handlers for mobile carousel
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && pageNumber < numPages) {
+      goToNextPage();
+    }
+    if (isRightSwipe && pageNumber > 1) {
+      goToPrevPage();
+    }
+
+    setTouchStart(0);
+    setTouchEnd(0);
   };
 
   return (
@@ -131,39 +146,33 @@ const EbookPreview: React.FC = () => {
                 </div>
               </div>
 
-              {/* Mobile view - Simple card with PDF */}
+              {/* Mobile view - Image Carousel */}
               <div className="md:hidden">
-                <div className="bg-gray-900 border-2 border-secondary/30 rounded-xl p-4">
-                  <div className="pdf-container-mobile">
-                    <Document
-                      file="/E-BOOK-pages.pdf"
-                      onLoadSuccess={onDocumentLoadSuccess}
-                      onLoadError={onDocumentLoadError}
-                      loading={
-                        <div className="flex items-center justify-center h-64">
-                          <div className="text-gray-400">Ładowanie...</div>
-                        </div>
-                      }
-                      error={
-                        <div className="flex items-center justify-center h-64 text-center">
-                          <div className="text-red-400 p-4">
-                            {error || 'Błąd ładowania PDF'}
-                            <div className="mt-2 text-sm">
-                              <a href="/E-BOOK-pages.pdf" target="_blank" rel="noopener noreferrer" className="text-secondary underline">
-                                Otwórz PDF w nowej karcie
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      }
-                    >
-                      <Page
-                        pageNumber={pageNumber}
-                        width={pageWidth}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
+                <div className="bg-gray-900 border-2 border-secondary/30 rounded-xl p-4 overflow-hidden">
+                  <div
+                    className="relative"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                  >
+                    <div className="relative aspect-[210/297] bg-white rounded-lg overflow-hidden">
+                      <img
+                        src={`/ebook-pages/page-${String(pageNumber).padStart(2, '0')}.jpg`}
+                        alt={`Strona ${pageNumber} z ${numPages}`}
+                        className="w-full h-full object-contain"
+                        loading="lazy"
                       />
-                    </Document>
+                    </div>
+                    
+                    {/* Swipe hint overlay on first page */}
+                    {pageNumber === 1 && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
+                        <div className="text-white text-center p-4">
+                          <div className="text-2xl mb-2">←  →</div>
+                          <div className="text-sm">Przesuń palcem, aby zobaczyć więcej</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
