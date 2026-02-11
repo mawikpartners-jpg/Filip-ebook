@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 // Configure PDF.js worker - using jsDelivr CDN for best reliability
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const EbookPreview: React.FC = () => {
+  const numPages = 10; // Total pages to show
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [numPages] = useState<number>(10); // Total pages to show
   const [error, setError] = useState<string | null>(null);
   const [touchStart, setTouchStart] = useState<number>(0);
   const [touchEnd, setTouchEnd] = useState<number>(0);
 
   // Desktop PDF viewer functions
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+  function onDocumentLoadSuccess(): void {
     setError(null);
   }
 
