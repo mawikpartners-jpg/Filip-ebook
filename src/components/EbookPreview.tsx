@@ -1,15 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 
-// Configure PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+// Configure PDF.js worker - using jsDelivr CDN for best reliability
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const EbookPreview: React.FC = () => {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageWidth, setPageWidth] = useState<number>(400);
+  const [error, setError] = useState<string | null>(null);
+
+  // Handle responsive width for mobile
+  useEffect(() => {
+    const updateWidth = () => {
+      if (typeof window !== 'undefined') {
+        setPageWidth(Math.min(window.innerWidth - 80, 400));
+      }
+    };
+    
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(Math.min(numPages, 10)); // Show max 10 pages
+    setError(null);
+  }
+
+  function onDocumentLoadError(error: Error): void {
+    console.error('Error loading PDF:', error);
+    setError('Nie udało się załadować podglądu PDF. Spróbuj odświeżyć stronę.');
   }
 
   const goToPrevPage = () => {
@@ -77,9 +98,22 @@ const EbookPreview: React.FC = () => {
                         <Document
                           file="/E-BOOK-pages.pdf"
                           onLoadSuccess={onDocumentLoadSuccess}
+                          onLoadError={onDocumentLoadError}
                           loading={
                             <div className="flex items-center justify-center h-full">
                               <div className="text-gray-400">Ładowanie...</div>
+                            </div>
+                          }
+                          error={
+                            <div className="flex items-center justify-center h-full p-4 text-center">
+                              <div className="text-red-400">
+                                {error || 'Błąd ładowania PDF'}
+                                <div className="mt-2 text-sm">
+                                  <a href="/E-BOOK-pages.pdf" target="_blank" rel="noopener noreferrer" className="text-secondary underline">
+                                    Otwórz PDF w nowej karcie
+                                  </a>
+                                </div>
+                              </div>
                             </div>
                           }
                         >
@@ -104,15 +138,28 @@ const EbookPreview: React.FC = () => {
                     <Document
                       file="/E-BOOK-pages.pdf"
                       onLoadSuccess={onDocumentLoadSuccess}
+                      onLoadError={onDocumentLoadError}
                       loading={
                         <div className="flex items-center justify-center h-64">
                           <div className="text-gray-400">Ładowanie...</div>
                         </div>
                       }
+                      error={
+                        <div className="flex items-center justify-center h-64 text-center">
+                          <div className="text-red-400 p-4">
+                            {error || 'Błąd ładowania PDF'}
+                            <div className="mt-2 text-sm">
+                              <a href="/E-BOOK-pages.pdf" target="_blank" rel="noopener noreferrer" className="text-secondary underline">
+                                Otwórz PDF w nowej karcie
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      }
                     >
                       <Page
                         pageNumber={pageNumber}
-                        width={Math.min(window.innerWidth - 80, 400)}
+                        width={pageWidth}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                       />
