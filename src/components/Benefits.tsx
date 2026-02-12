@@ -55,7 +55,7 @@ const Benefits: React.FC = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-secondary text-2xl flex-shrink-0">✅</span>
-                <span className="text-gray-300">Świadome decyzje zamiast „bo tak doradzili"</span>
+                <span className="text-gray-300">Świadome decyzje</span>
               </li>
             </ul>
           </div>

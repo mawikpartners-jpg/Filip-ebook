@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import NewsletterForm from './NewsletterForm';
 
 // Configure PDF.js worker - using jsDelivr CDN for best reliability
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const EbookPreview: React.FC = () => {
   const numPages = 10; // Total pages to show
+  const freePages = 5; // First 5 pages are free
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
-  const [touchStart, setTouchStart] = useState<number>(0);
-  const [touchEnd, setTouchEnd] = useState<number>(0);
+  const [unlocked, setUnlocked] = useState<boolean>(false);
+  const [showNewsletter, setShowNewsletter] = useState<boolean>(false);
+
+  // Check localStorage on mount
+  useEffect(() => {
+    const isUnlocked = localStorage.getItem('ebook_newsletter_subscribed') === 'true';
+    setUnlocked(isUnlocked);
+  }, []);
 
   // Desktop PDF viewer functions
   function onDocumentLoadSuccess(): void {
@@ -26,38 +34,30 @@ const EbookPreview: React.FC = () => {
   };
 
   const goToNextPage = () => {
-    setPageNumber((prev) => Math.min(numPages, prev + 1));
-  };
-
-  // Touch handlers for mobile carousel
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && pageNumber < numPages) {
-      goToNextPage();
+    const maxPage = unlocked ? numPages : freePages;
+    if (pageNumber < maxPage) {
+      setPageNumber((prev) => prev + 1);
+    } else if (pageNumber === freePages && !unlocked) {
+      setShowNewsletter(true);
     }
-    if (isRightSwipe && pageNumber > 1) {
-      goToPrevPage();
-    }
+  };
 
-    setTouchStart(0);
-    setTouchEnd(0);
+  const handleNewsletterSuccess = () => {
+    setUnlocked(true);
+    setShowNewsletter(false);
+    setPageNumber(6); // Jump to page 6
   };
 
   return (
-    <section className="py-20 px-4 bg-black">
+    <>
+      {showNewsletter && (
+        <NewsletterForm 
+          onSuccess={handleNewsletterSuccess}
+          onClose={() => setShowNewsletter(false)}
+        />
+      )}
+      
+      <section className="py-20 px-4 bg-black">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -146,30 +146,42 @@ const EbookPreview: React.FC = () => {
                 </div>
               </div>
 
-              {/* Mobile view - Image Carousel */}
+              {/* Mobile view - Vertical scroll with pages */}
               <div className="md:hidden">
-                <div className="bg-gray-900 border-2 border-secondary/30 rounded-xl p-4 overflow-hidden">
-                  <div
-                    className="relative"
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                  >
-                    <div className="relative aspect-[210/297] bg-white rounded-lg overflow-hidden">
-                      <img
-                        src={`/ebook-pages/page-${String(pageNumber).padStart(2, '0')}.jpg`}
-                        alt={`Strona ${pageNumber} z ${numPages}`}
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                      />
-                    </div>
+                <div className="bg-gray-900 border-2 border-secondary/30 rounded-xl p-4 overflow-hidden relative">
+                  <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                    {Array.from({ length: unlocked ? numPages : freePages }, (_, i) => i + 1).map((page) => (
+                      <div key={page} className="relative">
+                        <img
+                          src={`/ebook-pages/page-${String(page).padStart(2, '0')}.jpg`}
+                          alt={`Strona ${page} z ${numPages}`}
+                          className="w-full rounded-lg shadow-lg"
+                          loading="lazy"
+                        />
+                        <div className="text-center text-gray-400 text-sm mt-2">
+                          Strona {page} / {unlocked ? numPages : freePages}
+                        </div>
+                      </div>
+                    ))}
                     
-                    {/* Swipe hint overlay on first page */}
-                    {pageNumber === 1 && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
-                        <div className="text-white text-center p-4">
-                          <div className="text-2xl mb-2">←  →</div>
-                          <div className="text-sm">Przesuń palcem, aby zobaczyć więcej</div>
+                    {/* Locked pages blur */}
+                    {!unlocked && (
+                      <div className="relative">
+                        <div className="relative">
+                          <img
+                            src={`/ebook-pages/page-06.jpg`}
+                            alt="Zablokowana strona"
+                            className="w-full rounded-lg blur-md"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-lg">
+                            <button
+                              onClick={() => setShowNewsletter(true)}
+                              className="bg-secondary text-primary px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105"
+                            >
+                              🔓 Odblokuj kolejne 5 stron
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -177,9 +189,9 @@ const EbookPreview: React.FC = () => {
                 </div>
               </div>
 
-              {/* Navigation controls */}
+              {/* Navigation controls - Desktop only */}
               {numPages > 0 && (
-                <div className="mt-6 flex items-center justify-center gap-4">
+                <div className="mt-6 hidden md:flex items-center justify-center gap-4">
                   <button
                     onClick={goToPrevPage}
                     disabled={pageNumber <= 1}
@@ -204,8 +216,9 @@ const EbookPreview: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 };
 

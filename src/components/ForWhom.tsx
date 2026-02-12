@@ -39,7 +39,7 @@ const ForWhom: React.FC = () => {
         <div className="mt-12 text-center max-w-3xl mx-auto">
           <div className="bg-secondary/10 border-l-4 border-secondary p-6 rounded-r-xl">
             <p className="text-lg text-gray-300">
-              <strong className="text-secondary">Ten e-book to dla Ciebie,</strong> jeśli chcesz przejąć kontrolę nad sprzedażą swojego mieszkania, 
+              <strong className="text-secondary">Ten e-book jest dla Ciebie,</strong> jeśli chcesz przejąć kontrolę nad sprzedażą swojego mieszkania, 
               zaoszczędzić tysiące złotych i czuć się pewnie na każdym etapie procesu.
             </p>
           </div>

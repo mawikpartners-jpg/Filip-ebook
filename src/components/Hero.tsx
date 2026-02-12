@@ -10,7 +10,7 @@ const Hero: React.FC = () => {
               🎁 E-book + DARMOWA konsultacja telefoniczna z agentem nieruchomości
             </div>
             <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-              Sprzedaż mieszkania{' '}
+              E-book: Sprzedaż mieszkania{' '}
               <span className="text-gradient">krok po kroku</span>
             </h1>
             <p className="text-xl text-gray-300">

@@ -55,7 +55,7 @@ const Pricing: React.FC = () => {
           <div className="bg-gradient-to-br from-secondary/20 to-secondary/5 border-4 border-secondary rounded-3xl p-8 md:p-12 relative overflow-hidden">
             {/* Ribbon */}
             <div className="absolute top-6 -right-12 bg-red-600 text-white px-12 py-2 transform rotate-45 text-sm font-bold shadow-lg">
-              BESTSELLER
+              PROMOCJA
             </div>
 
             <div className="text-center mb-8">
@@ -68,9 +68,12 @@ const Pricing: React.FC = () => {
             {/* Price */}
             <div className="text-center mb-8">
               <div className="inline-block">
-                <div className="text-6xl font-bold text-secondary mb-2">269,99 zł</div>
-                <div className="text-gray-400 line-through text-xl mb-2">499,99 zł</div>
-                <div className="bg-secondary text-primary px-4 py-2 rounded-lg font-bold">
+                <div className="text-gray-400 line-through text-2xl mb-2">499,99 zł</div>
+                <div className="text-7xl font-bold text-red-500 mb-2">269,99 zł</div>
+                <div className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold inline-block">
+                  PROMOCJA -46%
+                </div>
+                <div className="mt-3 text-secondary font-semibold text-lg">
                   Oszczędzasz nawet kilkanaście tysięcy złotych!
                 </div>
               </div>
@@ -93,7 +96,7 @@ const Pricing: React.FC = () => {
                   <span className="text-secondary text-2xl flex-shrink-0">📞</span>
                   <div>
                     <p className="font-bold text-white">Darmowa konsultacja telefoniczna</p>
-                    <p className="text-sm text-gray-400">Z agentem nieruchomości Filipem Liberdą</p>
+                    <p className="text-sm text-gray-400">30 minut rozmowy z agentem Filipem Liberdą</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3 bg-black/30 p-4 rounded-lg">
@@ -147,10 +150,15 @@ const Pricing: React.FC = () => {
           {/* Additional trust element */}
           <div className="mt-8 text-center">
             <div className="bg-secondary/10 border-2 border-secondary/30 rounded-xl p-6">
-              <p className="text-lg text-gray-300">
-                <span className="text-secondary font-bold">Ważne!</span> Po zakupie ebooka otrzymujesz również możliwość 
-                <span className="text-secondary font-semibold"> bezpłatnej konsultacji telefonicznej z Filipem Liberdą</span>, 
-                jeśli będziesz mieć jakiekolwiek pytania lub wątpliwości. To nie tylko e-book – to kompleksowe wsparcie!
+              <p className="text-lg text-gray-300 mb-3">
+                <span className="text-secondary font-bold text-xl">🎁 Bonus: Darmowa Konsultacja Telefoniczna</span>
+              </p>
+              <p className="text-gray-300">
+                Po zakupie e-booka otrzymujesz <span className="text-secondary font-semibold">30-minutową konsultację telefoniczną z Filipem Liberdą</span> – agentem nieruchomości z wieloletnim doświadczeniem. 
+                To idealna okazja, żeby wyjaśnić wszelkie wątpliwości, dostosować strategie do Twojej sytuacji i uzyskać profesjonalne wsparcie.
+              </p>
+              <p className="text-secondary font-bold mt-3 text-lg">
+                Wartość konsultacji: 300 zł – w pakiecie z e-bookiem GRATIS!
               </p>
             </div>
           </div>

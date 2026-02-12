@@ -18,12 +18,18 @@ const App: React.FC = () => {
       <main>
         <Hero />
         <WhyThisEbook />
-        <EbookPreview />
+        <section id="preview">
+          <EbookPreview />
+        </section>
         <Benefits />
         <About />
-        <ForWhom />
+        <section id="for-whom">
+          <ForWhom />
+        </section>
         <Testimonials />
-        <Authors />
+        <section id="authors">
+          <Authors />
+        </section>
         <Pricing />
       </main>
       <Footer />

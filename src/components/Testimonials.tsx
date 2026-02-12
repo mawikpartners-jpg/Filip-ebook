@@ -11,7 +11,7 @@ const testimonials: Testimonial[] = [
   {
     name: 'Michał Nowak',
     role: 'Kraków',
-    content: 'Świetny przewodnik! Szczególnie pomocne były szablony dokumentów i checklisty. Proces sprzedaży przebiegł bez problemów.',
+    content: 'Świetny przewodnik! Szczególnie pomocne były praktyczne wskazówki i checklisty. Proces sprzedaży przebiegł bez problemów.',
     rating: 5,
   },
   {
@@ -67,8 +67,8 @@ const Testimonials: React.FC = () => {
             Gwarancja 100% satysfakcji
           </h3>
           <p className="text-xl text-gray-300 mb-6 max-w-3xl mx-auto">
-            Jesteśmy przekonani o wartości naszego e-booka. Jeśli w ciągu 30 dni uznasz, że nie
-            spełnia Twoich oczekiwań, zwrócimy Ci pełną kwotę - bez pytań.
+            Jesteśmy przekonani o wartości naszego e-booka. Jeśli masz jakiekolwiek problemy lub wątpliwości,
+            skontaktuj się z nami - na pewno znajdziemy rozwiązanie i pomożemy Ci osiągnąć sukces w sprzedaży.
           </p>
           <div className="flex justify-center items-center space-x-4 text-secondary">
             <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">

@@ -15,6 +15,15 @@ const Header: React.FC = () => {
           <a href="#benefits" className="text-white hover:text-secondary transition-colors">
             Korzyści
           </a>
+          <a href="#preview" className="text-white hover:text-secondary transition-colors">
+            Podgląd
+          </a>
+          <a href="#for-whom" className="text-white hover:text-secondary transition-colors">
+            Dla kogo
+          </a>
+          <a href="#authors" className="text-white hover:text-secondary transition-colors">
+            Autorzy
+          </a>
           <a href="#about" className="text-white hover:text-secondary transition-colors">
             O e-booku
           </a>
