@@ -52,7 +52,7 @@ const Authors: React.FC = () => {
               <img 
                 src="/wiktoria.jpeg" 
                 alt="Wiktoria Wilińska - Specjalistka ds. marketingu nieruchomości" 
-                className="w-48 h-48 rounded-full mx-auto object-cover object-center border-4 border-secondary"
+                className="w-48 h-48 rounded-full mx-auto object-cover object-top border-4 border-secondary"
               />
             </div>
             <h3 className="text-2xl font-bold text-secondary text-center mb-4">
