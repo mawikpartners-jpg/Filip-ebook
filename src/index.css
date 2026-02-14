@@ -21,8 +21,8 @@
 
 .smartphone-frame {
   position: relative;
-  width: 320px;
-  height: 650px;
+  width: 380px;
+  height: 540px;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border-radius: 40px;
   padding: 12px;
@@ -82,11 +82,35 @@
 .pdf-container {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background: #f5f5f5;
+  background: #1a1a1a;
+  padding: 0;
+}
+
+.pdf-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pdf-container::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.pdf-container::-webkit-scrollbar-thumb {
+  background: #f0c976;
+  border-radius: 2px;
+}
+
+.pdf-page-full {
+  margin-bottom: 4px;
+}
+
+.pdf-page-full canvas {
+  width: 100% !important;
+  height: auto !important;
 }
 
 .pdf-container-mobile {
@@ -102,8 +126,8 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .smartphone-frame {
-    width: 280px;
-    height: 570px;
+    width: 320px;
+    height: 455px;
     transform: rotateY(0deg);
   }
 }

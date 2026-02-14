@@ -68,6 +68,7 @@ const Pricing: React.FC = () => {
             {/* Price */}
             <div className="text-center mb-8">
               <div className="inline-block">
+                <div className="text-red-500 font-bold text-xl mb-2">CENA PROMOCYJNA</div>
                 <div className="text-gray-400 line-through text-2xl mb-2">499,99 zł</div>
                 <div className="text-7xl font-bold text-red-500 mb-2">269,99 zł</div>
                 <div className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold inline-block">

@@ -6,12 +6,13 @@ const Footer: React.FC = () => {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <div className="mb-4">
+            <div className="mb-4 flex items-center space-x-3">
               <img 
                 src="/83r9p1uwquwpmiinhgzfhqsbbho.avif" 
                 alt="best-investments logo" 
                 className="h-12 w-auto object-contain"
               />
+              <span className="text-white font-bold text-xl">best-investments</span>
             </div>
             <p className="text-gray-400">
               Kompleksowe rozwiązania w zakresie nieruchomości i inwestycji.

@@ -4,12 +4,13 @@ const Header: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-secondary/20">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center">
+        <div className="flex items-center space-x-3">
           <img 
             src="/83r9p1uwquwpmiinhgzfhqsbbho.avif" 
             alt="best-investments logo" 
             className="h-12 w-auto object-contain"
           />
+          <span className="text-white font-bold text-xl">best-investments</span>
         </div>
         <nav className="hidden md:flex space-x-6">
           <a href="#benefits" className="text-white hover:text-secondary transition-colors">

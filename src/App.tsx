@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import WhyThisEbook from './components/WhyThisEbook';
 import EbookPreview from './components/EbookPreview';
+import Consultation from './components/Consultation';
 import Benefits from './components/Benefits';
 import About from './components/About';
 import ForWhom from './components/ForWhom';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <section id="preview">
           <EbookPreview />
         </section>
+        <Consultation />
         <Benefits />
         <About />
         <section id="for-whom">

@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
 import NewsletterForm from './NewsletterForm';
-
-// Configure PDF.js worker - using jsDelivr CDN for best reliability
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const EbookPreview: React.FC = () => {
   const numPages = 10; // Total pages to show
   const freePages = 5; // First 5 pages are free
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [error, setError] = useState<string | null>(null);
   const [unlocked, setUnlocked] = useState<boolean>(false);
   const [showNewsletter, setShowNewsletter] = useState<boolean>(false);
 
@@ -19,33 +13,9 @@ const EbookPreview: React.FC = () => {
     setUnlocked(isUnlocked);
   }, []);
 
-  // Desktop PDF viewer functions
-  function onDocumentLoadSuccess(): void {
-    setError(null);
-  }
-
-  function onDocumentLoadError(error: Error): void {
-    console.error('Error loading PDF:', error);
-    setError('Nie udało się załadować podglądu PDF. Spróbuj odświeżyć stronę.');
-  }
-
-  const goToPrevPage = () => {
-    setPageNumber((prev) => Math.max(1, prev - 1));
-  };
-
-  const goToNextPage = () => {
-    const maxPage = unlocked ? numPages : freePages;
-    if (pageNumber < maxPage) {
-      setPageNumber((prev) => prev + 1);
-    } else if (pageNumber === freePages && !unlocked) {
-      setShowNewsletter(true);
-    }
-  };
-
   const handleNewsletterSuccess = () => {
     setUnlocked(true);
     setShowNewsletter(false);
-    setPageNumber(6); // Jump to page 6
   };
 
   return (
@@ -110,35 +80,36 @@ const EbookPreview: React.FC = () => {
                     <div className="smartphone-notch"></div>
                     <div className="smartphone-screen">
                       <div className="pdf-container">
-                        <Document
-                          file="/E-BOOK-pages.pdf"
-                          onLoadSuccess={onDocumentLoadSuccess}
-                          onLoadError={onDocumentLoadError}
-                          loading={
-                            <div className="flex items-center justify-center h-full">
-                              <div className="text-gray-400">Ładowanie...</div>
+                        {Array.from({ length: unlocked ? numPages : freePages }, (_, i) => i + 1).map((page) => (
+                          <div key={page} className="relative w-full">
+                            <img
+                              src={`/ebook-pages/page-${String(page).padStart(2, '0')}.jpg`}
+                              alt={`Strona ${page} z ${numPages}`}
+                              className="w-full"
+                              loading="lazy"
+                            />
+                          </div>
+                        ))}
+                        
+                        {/* Locked pages blur */}
+                        {!unlocked && (
+                          <div className="relative w-full">
+                            <img
+                              src={`/ebook-pages/page-06.jpg`}
+                              alt="Zablokowana strona"
+                              className="w-full blur-md"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                              <button
+                                onClick={() => setShowNewsletter(true)}
+                                className="bg-secondary text-primary px-6 py-3 rounded-xl font-bold text-sm hover:bg-yellow-300 transition-all transform hover:scale-105"
+                              >
+                                🔓 Odblokuj
+                              </button>
                             </div>
-                          }
-                          error={
-                            <div className="flex items-center justify-center h-full p-4 text-center">
-                              <div className="text-red-400">
-                                {error || 'Błąd ładowania PDF'}
-                                <div className="mt-2 text-sm">
-                                  <a href="/E-BOOK-pages.pdf" target="_blank" rel="noopener noreferrer" className="text-secondary underline">
-                                    Otwórz PDF w nowej karcie
-                                  </a>
-                                </div>
-                              </div>
-                            </div>
-                          }
-                        >
-                          <Page
-                            pageNumber={pageNumber}
-                            width={296}
-                            renderTextLayer={false}
-                            renderAnnotationLayer={false}
-                          />
-                        </Document>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="smartphone-home-indicator"></div>
@@ -189,30 +160,6 @@ const EbookPreview: React.FC = () => {
                 </div>
               </div>
 
-              {/* Navigation controls - Desktop only */}
-              {numPages > 0 && (
-                <div className="mt-6 hidden md:flex items-center justify-center gap-4">
-                  <button
-                    onClick={goToPrevPage}
-                    disabled={pageNumber <= 1}
-                    className="bg-secondary text-primary p-3 rounded-lg font-bold hover:bg-yellow-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Previous page"
-                  >
-                    ← Poprzednia
-                  </button>
-                  <div className="text-gray-300 font-semibold">
-                    <span className="text-secondary text-xl">{pageNumber}</span> / {numPages}
-                  </div>
-                  <button
-                    onClick={goToNextPage}
-                    disabled={pageNumber >= numPages}
-                    className="bg-secondary text-primary p-3 rounded-lg font-bold hover:bg-yellow-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Next page"
-                  >
-                    Następna →
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>
