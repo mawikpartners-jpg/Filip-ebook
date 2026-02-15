@@ -10,7 +10,7 @@ const Header: React.FC = () => {
             alt="best-investments logo" 
             className="h-12 w-auto object-contain"
           />
-          <span className="text-white font-bold text-xl">best-investments</span>
+          <span className="text-white font-bold text-xl">Best Investments</span>
         </div>
         <nav className="hidden md:flex space-x-6">
           <a href="#benefits" className="text-white hover:text-secondary transition-colors">

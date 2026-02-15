@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
                 alt="best-investments logo" 
                 className="h-12 w-auto object-contain"
               />
-              <span className="text-white font-bold text-xl">best-investments</span>
+              <span className="text-white font-bold text-xl">Best Investments</span>
             </div>
             <p className="text-gray-400">
               Kompleksowe rozwiązania w zakresie nieruchomości i inwestycji.
