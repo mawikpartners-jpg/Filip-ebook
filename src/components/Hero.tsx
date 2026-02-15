@@ -4,6 +4,13 @@ const Hero: React.FC = () => {
   return (
     <section className="pt-20 pb-20 px-4">
       <div className="container mx-auto">
+        {/* Promotion Banner */}
+        <div className="mb-8 text-center">
+          <div className="inline-block bg-gradient-to-r from-red-600 to-red-500 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg animate-pulse">
+            🔥 LIMITOWANA PROMOCJA! Oszczędź 230 zł • Tylko 269,99 zł zamiast 499,99 zł
+          </div>
+        </div>
+        
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-block bg-secondary/20 text-secondary px-4 py-2 rounded-full text-sm font-semibold">

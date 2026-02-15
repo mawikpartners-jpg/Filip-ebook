@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import NewsletterForm from './NewsletterForm';
 
 const EbookPreview: React.FC = () => {
@@ -6,12 +6,6 @@ const EbookPreview: React.FC = () => {
   const freePages = 5; // First 5 pages are free
   const [unlocked, setUnlocked] = useState<boolean>(false);
   const [showNewsletter, setShowNewsletter] = useState<boolean>(false);
-
-  // Check localStorage on mount
-  useEffect(() => {
-    const isUnlocked = localStorage.getItem('ebook_newsletter_subscribed') === 'true';
-    setUnlocked(isUnlocked);
-  }, []);
 
   const handleNewsletterSuccess = () => {
     setUnlocked(true);
@@ -79,7 +73,15 @@ const EbookPreview: React.FC = () => {
                   <div className="smartphone-frame">
                     <div className="smartphone-notch"></div>
                     <div className="smartphone-screen">
-                      <div className="pdf-container">
+                      <div className="pdf-container relative">
+                        {/* Scroll hint - shows on first page */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
+                          <div className="bg-black/70 text-secondary px-4 py-2 rounded-lg text-center animate-bounce">
+                            <div className="text-2xl mb-1">↓</div>
+                            <div className="text-xs font-semibold">Przewiń w dół</div>
+                          </div>
+                        </div>
+                        
                         {Array.from({ length: unlocked ? numPages : freePages }, (_, i) => i + 1).map((page) => (
                           <div key={page} className="relative w-full">
                             <img
@@ -103,9 +105,9 @@ const EbookPreview: React.FC = () => {
                             <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                               <button
                                 onClick={() => setShowNewsletter(true)}
-                                className="bg-secondary text-primary px-6 py-3 rounded-xl font-bold text-sm hover:bg-yellow-300 transition-all transform hover:scale-105"
+                                className="bg-secondary text-primary px-4 py-2 rounded-xl font-bold text-xs hover:bg-yellow-300 transition-all transform hover:scale-105"
                               >
-                                🔓 Odblokuj
+                                🔓 Odblokuj kolejne darmowe strony
                               </button>
                             </div>
                           </div>
