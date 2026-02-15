@@ -2,7 +2,7 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <section className="pt-20 pb-20 px-4">
+    <section className="pt-28 pb-20 px-4">
       <div className="container mx-auto">
         {/* Promotion Banner */}
         <div className="mb-8 text-center">
