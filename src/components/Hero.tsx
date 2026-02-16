@@ -33,7 +33,7 @@ const Hero: React.FC = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="#pricing"
+                href="https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000"
                 className="bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105 text-center"
               >
                 Pobierz teraz za 269,99 zł

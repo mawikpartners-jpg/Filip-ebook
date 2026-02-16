@@ -1,42 +1,10 @@
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React from 'react';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000';
 
 const Pricing: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
-      }
-
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          priceId: import.meta.env.VITE_STRIPE_PRICE_ID,
-        }),
-      });
-
-      const session = await response.json();
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
-
-      if (result.error) {
-        console.error(result.error.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleCheckout = () => {
+    window.location.href = STRIPE_PAYMENT_LINK;
   };
 
   return (
@@ -121,10 +89,9 @@ const Pricing: React.FC = () => {
             <div className="text-center">
               <button
                 onClick={handleCheckout}
-                disabled={loading}
-                className="bg-secondary text-primary px-12 py-5 rounded-xl font-bold text-2xl hover:bg-yellow-300 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl"
+                className="bg-secondary text-primary px-12 py-5 rounded-xl font-bold text-2xl hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-2xl"
               >
-                {loading ? 'Przekierowanie...' : 'Kup teraz za 269,99 zł'}
+                Kup teraz za 269,99 zł
               </button>
               <p className="text-sm text-gray-400 mt-4">
                 � Bezpieczna płatność przez Stripe • ✅ Natychmiastowy dostęp
