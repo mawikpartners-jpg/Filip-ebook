@@ -94,14 +94,14 @@ const Pricing: React.FC = () => {
                 Kup teraz za 269,99 zł
               </button>
               <p className="text-sm text-gray-400 mt-4">
-                � Bezpieczna płatność przez Stripe • ✅ Natychmiastowy dostęp
+                💳 Bezpieczna płatność przez Stripe • ✅ Natychmiastowy dostęp
               </p>
             </div>
 
             {/* Guarantees */}
             <div className="mt-8 grid md:grid-cols-3 gap-4 text-center">
               <div className="bg-black/30 p-4 rounded-lg">
-                <div className="text-2xl mb-2">�</div>
+                <div className="text-2xl mb-2">💳</div>
                 <p className="text-sm text-gray-300">Bezpieczna płatność</p>
               </div>
               <div className="bg-black/30 p-4 rounded-lg">
