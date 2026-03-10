@@ -33,7 +33,7 @@ const Header: React.FC = () => {
           </a>
         </nav>
         <a
-          href="#pricing"
+          href="https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000"
           className="bg-secondary text-primary px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition-colors"
         >
           Kup teraz
