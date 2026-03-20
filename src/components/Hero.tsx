@@ -1,4 +1,5 @@
 import React from 'react';
+import { STRIPE_PAYMENT_LINK } from '../utils/stripe';
 
 const Hero: React.FC = () => {
   return (
@@ -33,7 +34,7 @@ const Hero: React.FC = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000"
+                href={STRIPE_PAYMENT_LINK}
                 className="bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105 text-center"
               >
                 Pobierz teraz za 269,99 zł

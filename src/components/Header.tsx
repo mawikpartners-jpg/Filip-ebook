@@ -1,4 +1,5 @@
 import React from 'react';
+import { STRIPE_PAYMENT_LINK } from '../utils/stripe';
 
 const Header: React.FC = () => {
   return (
@@ -33,7 +34,7 @@ const Header: React.FC = () => {
           </a>
         </nav>
         <a
-          href="https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000"
+          href={STRIPE_PAYMENT_LINK}
           className="bg-secondary text-primary px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition-colors"
         >
           Kup teraz

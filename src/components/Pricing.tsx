@@ -1,6 +1,5 @@
 import React from 'react';
-
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/6oU5kD6tv1g7gNTfI1co000';
+import { STRIPE_PAYMENT_LINK } from '../utils/stripe';
 
 const Pricing: React.FC = () => {
   const handleCheckout = () => {
