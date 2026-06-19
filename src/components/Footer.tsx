@@ -63,6 +63,17 @@ const Footer: React.FC = () => {
             </a>
             . Wszelkie prawa zastrzeżone.
           </p>
+          <p>
+            Stworzone z <span className="text-secondary" aria-label="serce">♥</span> przez{' '}
+            <a
+              href="https://procesflow.pl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary hover:text-yellow-300 transition-colors"
+            >
+              Procesflow
+            </a>
+          </p>
         </div>
       </div>
     </footer>
