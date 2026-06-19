@@ -52,16 +52,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
           <p className="mb-2">
-            © {new Date().getFullYear()}{' '}
-            <a 
-              href="https://procesflow.pl/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-secondary hover:text-yellow-300 transition-colors"
-            >
-              Procesflow
-            </a>
-            . Wszelkie prawa zastrzeżone.
+            © {new Date().getFullYear()} Best Investments. Wszelkie prawa zastrzeżone.
           </p>
           <p>
             Stworzone z <span className="text-secondary" aria-label="serce">♥</span> przez{' '}
